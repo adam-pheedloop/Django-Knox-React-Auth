@@ -41,6 +41,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'knox',
     'corsheaders',
+    'social_django',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.github',
+    'django.contrib.sites',
 ]
 
 MIDDLEWARE = [
@@ -56,14 +62,33 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'core.urls'
 
-CORS_ORIGIN_WHITELIST = (
+CORS_ORIGIN_WHITELIST = [
     'https://localhost:3000',
+    'http://localhost:3000'
+]
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 )
+
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = 'home'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+
+#---------------------------------------------
+#          FACEBOOK API KEYS HERE
+#--------------------------------------------
+
+FACEBOOK_APP_ID = '####################'
+FACEBOOK_APP_SECRET = '#############'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,6 +105,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
 }
 
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 
 WSGI_APPLICATION = 'core.wsgi.application'
 

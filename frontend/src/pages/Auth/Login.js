@@ -1,59 +1,84 @@
-import React, { useState } from 'react'
-import {connect} from "react-redux";
-import { Link } from 'react-router-dom'
-
-import {auth} from "../../actions";
+import React, { useState } from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import CustomFB from "../../components/CustomFB/CustomFB";
+import { auth } from "../../actions";
 
 function Login(props) {
-    const [formData, setFormData] = useState({})
+  const [formData, setFormData] = useState({});
 
-    const handleLogin = (event) => {
-        event.preventDefault()
-        props.login(formData.username, formData.password)
-    }
+  const handleLogin = event => {
+    event.preventDefault();
+    props.login(formData.username, formData.password);
+  };
+  if (props.location.search) {
+    console.log(props.location.search.slice(6));
+  }
 
-
-    
-    return (
-        <div>
-            <h1>Login</h1>
-            <form onSubmit = {handleLogin}>
-                <br/>
-                <label htmlFor='email'><b> Email: </b>
-                <input type='text' value={formData.username} placeholder = 'Email' name='email' onChange={e => setFormData({...formData, username : e.target.value})} required/>
-                </label>
-                <br/>
-                <label htmlFor='password'><b> Password: </b></label>
-                <input type='password' value={formData.password} placeholder = 'Password' name='password' onChange={e => setFormData({...formData, password : e.target.value})} required/>
-                <br/>
-                <input type='submit' value='Login'/>
-            </form>
-                <Link to='/register'>
-                <button type='button'>Dont have an account? Register for free today!</button>
-                </Link>
-        </div>
-    )
+  return (
+    <div>
+      <h1>Login</h1>
+      <form onSubmit={handleLogin}>
+        <br />
+        <label htmlFor="email">
+          <b> Email: </b>
+          <input
+            type="text"
+            value={formData.username}
+            placeholder="Email"
+            name="email"
+            onChange={e =>
+              setFormData({ ...formData, username: e.target.value })
+            }
+            required
+          />
+        </label>
+        <br />
+        <label htmlFor="password">
+          <b> Password: </b>
+        </label>
+        <input
+          type="password"
+          value={formData.password}
+          placeholder="Password"
+          name="password"
+          onChange={e => setFormData({ ...formData, password: e.target.value })}
+          required
+        />
+        <br />
+        <input type="submit" value="Login" />
+      </form>
+      <div>
+        <CustomFB />
+      </div>
+      <Link to="/register" style={{ display: "block" }}>
+        <button type="button">
+          Dont have an account? Register for free today!
+        </button>
+      </Link>
+    </div>
+  );
 }
 
 const mapStateToProps = state => {
-    let errors = [];
-    if (state.auth.errors) {
-      errors = Object.keys(state.auth.errors).map(field => {
-        return {field, message: state.auth.errors[field]};
-      });
+  let errors = [];
+  if (state.auth.errors) {
+    errors = Object.keys(state.auth.errors).map(field => {
+      return { field, message: state.auth.errors[field] };
+    });
+  }
+  return {
+    errors,
+    isAuthenticated: state.auth.isAuthenticated
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    login: (username, password) => {
+      return dispatch(auth.login(username, password));
     }
-    return {
-      errors,
-      isAuthenticated: state.auth.isAuthenticated
-    };
-  }
-  
-  const mapDispatchToProps = dispatch => {
-    return {
-      login: (username, password) => {
-        return dispatch(auth.login(username, password));
-      }
-    };
-  }
-  
-  export default connect(mapStateToProps, mapDispatchToProps)(Login);
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -21,6 +21,7 @@ from users import api
 from rest_framework import routers
 from knox.views import LogoutView
 
+
 router = routers.DefaultRouter()
 router.register(r'register', api.RegistrationAPI)
 
@@ -29,6 +30,8 @@ urlpatterns = [
     path('api/register/', api.RegistrationAPI.as_view()),
     path('api/login/', api.LoginAPI.as_view()),
     path('api/user/', api.UserAPI.as_view()),
-    path('api/logout/', LogoutView.as_view(), name='knox_logout')
+    path('api/logout/', LogoutView.as_view(), name='knox_logout'),
+    path('api/oauth/facebook/', api.OauthLoginAPI.as_view()),
+    path('api/oauth/facebook/success', api.OauthReturnTokenAPI.as_view())
 ]
     
